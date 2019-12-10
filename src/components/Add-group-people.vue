@@ -123,6 +123,9 @@ form > .col {
     justify-content: space-between;
 
     img {
+      @media (min-width: 900px) {
+        width: 45px;
+      }
       margin-right: 5px;
       width: 30px;
     }
