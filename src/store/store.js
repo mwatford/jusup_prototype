@@ -6,6 +6,7 @@ import AddGroup from "../views/Add-group.vue";
 import groups from "../scripts/groups.js";
 import posts from "../scripts/posts.js";
 import users from "../scripts/users.js";
+import alerts from "../scripts/alerts.js";
 import Vue from "vue";
 import Vuex from "vuex";
 
@@ -56,6 +57,7 @@ export const store = new Vuex.Store({
         component: AddGroup
       }
     ],
+    alerts,
     users,
     posts,
     groups,
@@ -81,7 +83,6 @@ export const store = new Vuex.Store({
     },
     SETUP_NEW_GROUP(state, { property, value }) {
       state.newGroup[property] = value;
-      console.log(value);
     },
     CHANGE_USER_ABILITY(state, data) {
       Object.assign(state.newGroup.userAbility, data);
@@ -112,7 +113,40 @@ export const store = new Vuex.Store({
     },
     ADD_NEW_POST(state, post) {
       post.id = state.posts.length;
-      state.posts.push(post);
+      state.posts.unshift(post);
+    },
+    POST_SIZE(state, { val, id }) {
+      state.posts.find(post => post.id === id).size = val;
+    },
+    DELETE_ALERT(state, index) {
+      state.alerts.splice(index, 1);
+    },
+    CLEAR_SELECTED_GROUPS(state) {
+      state.groups
+        .filter(el => el.active)
+        .forEach(el => {
+          el.active = false;
+        });
+    },
+    CHANGE_GROUP_SIZE(state, { size, group }) {
+      state.groups.find(el => el.name === group).size = size;
+    },
+    REACT(state, { name, id }) {
+      const liked = state.posts
+        .find(el => el.id === id)
+        .reactions.find(el => el.name === name).liked;
+
+      let value;
+
+      liked ? (value = -1) : (value = 1);
+
+      state.posts
+        .find(el => el.id === id)
+        .reactions.find(el => el.name === name).amount += value;
+
+      state.posts
+        .find(el => el.id === id)
+        .reactions.find(el => el.name === name).liked = !liked;
     }
   }
 });
