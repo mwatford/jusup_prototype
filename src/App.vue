@@ -20,6 +20,7 @@ export default {
         !this.$store.state.app.mobile &&
         window.innerWidth <= this.$store.state.app.break
       ) {
+        eventBus.$emit("toggle-panel", true);
         this.$store.commit("TOGGLE_MOBILE", true);
       } else if (
         this.$store.state.app.mobile &&
@@ -81,6 +82,9 @@ body {
 .col {
   display: flex;
   flex-direction: column;
+}
+.wrap {
+  flex-wrap: wrap;
 }
 .center {
   align-items: center;
