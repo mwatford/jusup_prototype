@@ -31,7 +31,11 @@
       </div>
       <div class="row">
         <label class="switch">
-          <input type="checkbox" :checked="userAbility.chat" @click="userAbilityChange('chat')" />
+          <input
+            type="checkbox"
+            :checked="userAbility.chat"
+            @click="userAbilityChange('chat')"
+          />
           <span class="slider round"></span>
         </label>
         <p>Create chat</p>
@@ -74,8 +78,11 @@ export default {
         { name: "heart", selected: false },
         { name: "hand", selected: false },
         { name: "glasses", selected: false },
-        { name: "facepalm", selected: false },
-        { name: "fistBump", selected: false }
+        // { name: "facepalm", selected: false },
+        // { name: "fistBump", selected: false },
+        { name: "paw", selected: false },
+        { name: "sad", selected: false },
+        { name: "smile", selected: false }
       ]
     };
   },
@@ -123,6 +130,9 @@ export default {
 }
 
 .icons {
+  @media (min-width: 900px) {
+    justify-content: space-between;
+  }
   justify-content: flex-start;
   align-items: center;
   margin: 20px auto;
@@ -131,6 +141,11 @@ export default {
   flex-wrap: wrap;
 
   &__item {
+    @media (min-width: 900px) {
+      width: 45px;
+      height: 45px;
+      margin: 6px 14px;
+    }
     cursor: pointer;
     display: flex;
     margin: 6px 10px;
@@ -144,7 +159,7 @@ export default {
 
     &--selected {
       position: relative;
-      transform: scale(1.5);
+      transform: scale(1.6);
     }
   }
 }
