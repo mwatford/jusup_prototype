@@ -1,5 +1,5 @@
 <template>
-  <div class="addGroup row" @submit.prevent="createGroup">
+  <form class="addGroup row" @submit.prevent="createGroup">
     <div class="col">
       <h1 v-if="!mobile">Create a group</h1>
       <component :is="currentComponent"></component>
@@ -9,12 +9,24 @@
       </div>-->
     </div>
     <h4 class="progress" v-if="!mobile">
-      <h4 :class="['progress__stage', { 'progress__stage--active': step === 0}]">Name</h4>
-      <h4 :class="['progress__stage', { 'progress__stage--active': step === 1}]">Configuration</h4>
-      <h4 :class="['progress__stage', { 'progress__stage--active': step === 2}]">Add people</h4>
+      <h4
+        :class="['progress__stage', { 'progress__stage--active': step === 0 }]"
+      >
+        Name
+      </h4>
+      <h4
+        :class="['progress__stage', { 'progress__stage--active': step === 1 }]"
+      >
+        Configuration
+      </h4>
+      <h4
+        :class="['progress__stage', { 'progress__stage--active': step === 2 }]"
+      >
+        Add people
+      </h4>
       <!-- <button class="progress__button button" v-show="step === 2">Create</button> -->
     </h4>
-  </div>
+  </form>
 </template>
 
 <script>
@@ -171,7 +183,7 @@ export default {
   }
 
   h1 {
-    margin: 30px 0 0 30px;
+    margin: 30px 0 30px 30px;
     color: #a3a3a3;
   }
 
