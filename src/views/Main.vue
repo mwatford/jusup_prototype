@@ -1,20 +1,27 @@
 <template>
   <div class="main row">
-    <div class="sidePanel col" v-if="sidePanel">
-      <Controls :active="{ tab: currentTab.name, view: currentView.name }"></Controls>
+    <div class="sidePanel col" v-if="sidePanelOpen">
+      <Controls
+        :active="{ tab: currentTab.name, view: currentView.name }"
+      ></Controls>
       <keep-alive>
         <component :is="currentTab.component" class="display" />
       </keep-alive>
     </div>
     <div class="sidePanel--hidden" v-else>
-      <img src="/src/assets/icons/caret.svg" @click="sidePanel = !sidePanel" />
+      <img src="/assets/images/icons/caret.svg" @click="sidePanel = true" />
     </div>
-    <component v-if="!$store.state.app.mobile" :is="currentView.component" class="display"></component>
+    <component
+      v-if="!mobile"
+      :is="currentView.component"
+      class="display"
+    ></component>
   </div>
 </template>
 
 <script>
 import Controls from "../components/controls.vue";
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -24,20 +31,35 @@ export default {
     return {
       sidePanel: true,
       currentTab: this.$store.state.tabs[0],
-      currentView: this.$store.state.tabs[2]
+      currentView: this.$store.state.tabs[3]
     };
+  },
+  computed: {
+    ...mapState({
+      mobile: state => state.app.mobile
+    }),
+    sidePanelOpen() {
+      return this.mobile ? true : this.sidePanel;
+    }
+  },
+  methods: {
+    togglePanel(val) {
+      this.sidePanel = val;
+    }
   },
   mounted() {
     eventBus.$on("tab-changed", name => {
       this.currentTab = this.$store.state.tabs.find(el => el.name === name);
-      this.addGroup = false;
     });
     eventBus.$on("view-changed", name => {
       this.currentView = this.$store.state.tabs.find(el => el.name === name);
-      this.addGroup = false;
     });
     eventBus.$on("set-tab", () => {
       this.currentTab = this.$store.state.tabs[0];
+      this.currentView = this.$store.state.tabs[3];
+    });
+    eventBus.$on("toggle-panel", val => {
+      this.togglePanel(val);
     });
   }
 };
@@ -53,6 +75,7 @@ export default {
   height: 100%;
   overflow-y: auto;
   width: 100%;
+  transition: width 0.3s ease;
 }
 .sidePanel {
   @media (max-width: 900px) {
@@ -78,7 +101,18 @@ export default {
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
 
     & img {
-      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      padding: 5px;
+
+      &:hover {
+        background: #ebebeb;
+      }
       transform: rotate(180deg);
     }
   }
