@@ -1,25 +1,38 @@
 <template>
   <form class="col" name="nameForm" @submit.prevent="submitForm">
     <header class="header col" v-if="mobile">
-      <img src="/assets/images/icons/caret.svg" class="header__icon" @click="$router.go(-1)" />
+      <img
+        src="/assets/images/icons/caret.svg"
+        class="header__icon"
+        @click="$router.go(-1)"
+      />
       <h3>Add new group</h3>
       <h6 class="header__stage">1/3 Name</h6>
     </header>
     <div class="icons row">
       <picture
         v-for="(avatar, index) in avatars"
-        :class="['icons__item', { 'icons__item--selected': currentAvatar === index }]"
+        :class="[
+          'icons__item',
+          { 'icons__item--selected': currentAvatar === index }
+        ]"
         :key="avatar"
         @click="selectAvatar(index)"
       >
-        <img :src="`/assets/images/avatars/${avatar}-${avatarColor.name}.svg`" alt />
+        <img
+          :src="`/assets/images/avatars/${avatar}-${avatarColor.name}.svg`"
+          alt
+        />
       </picture>
       <picture class="icons__item">
         <img src="/assets/images/icons/add.svg" alt />
       </picture>
     </div>
     <div class="color row" @click="colorPicker = !colorPicker">
-      <div class="currentColor" :style="{ background: avatarColor.value }"></div>
+      <div
+        class="currentColor"
+        :style="{ background: avatarColor.value }"
+      ></div>
       <h5>your color</h5>
       <div class="colorPicker row" v-if="colorPicker">
         <div
@@ -31,11 +44,21 @@
         ></div>
       </div>
     </div>
-    <input type="text" placeholder="Type your name" v-model.lazy="username" required />
+    <input
+      type="text"
+      placeholder="Type your name"
+      v-model.lazy="username"
+      required
+    />
     <div class="icons row">
       <picture
         v-for="(icon, index) in icons"
-        :class="[`icons__item--${iconColor.name}`, 'icons__item', { 'icons__item--selected': currentIcon === index }, 'icons__item--round']"
+        :class="[
+          `icons__item--${iconColor.name}`,
+          'icons__item',
+          { 'icons__item--selected': currentIcon === index },
+          'icons__item--round'
+        ]"
         :key="icon"
         @click="selectIcon(index)"
       >
@@ -58,8 +81,13 @@
         ></div>
       </div>
     </div>
-    <input type="text" placeholder="Type name of your group" v-model.lazy="groupName" required />
-    <button name="submit" class="submit" >
+    <input
+      type="text"
+      placeholder="Type name of your group"
+      v-model.lazy="groupName"
+      required
+    />
+    <button name="submit" class="submit">
       <img src="/assets/images/icons/check.svg" alt />
     </button>
   </form>
@@ -168,7 +196,7 @@ export default {
     },
     iconColor() {
       return this.colors[this.currentIconColor];
-    },
+    }
   },
   methods: {
     selectAvatar(index) {
@@ -242,6 +270,10 @@ form {
   flex-wrap: wrap;
 
   &__item {
+    @media (min-width: 900px) {
+      height: 45px;
+      width: 45px;
+    }
     cursor: pointer;
     display: flex;
     margin: 6px;
@@ -275,13 +307,18 @@ form {
     }
 
     &--round {
+      @media (min-width: 900px) {
+        width: 45px;
+        height: 45px;
+        padding: 10px;
+      }
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
       width: 30px;
       height: 30px;
-      padding: 6px;
+      padding: 7px;
     }
 
     & img {
