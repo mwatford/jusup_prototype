@@ -89,11 +89,22 @@ body {
 .center {
   align-items: center;
 }
+.relative {
+  position: relative;
+}
 
 .margin-left {
   margin-left: 10px;
 }
 .rotate-180 {
   transform: rotate(180deg);
+}
+.display {
+  display: flex;
+  min-width: 320px;
+  height: 100%;
+  overflow-y: auto;
+  width: 100%;
+  transition: width 0.3s ease;
 }
 </style>

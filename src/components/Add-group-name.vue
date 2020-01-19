@@ -54,11 +54,11 @@
       <picture
         v-for="(icon, index) in icons"
         :class="[
-          `icons__item--${iconColor.name}`,
           'icons__item',
           { 'icons__item--selected': currentIcon === index },
           'icons__item--round'
         ]"
+        :style="{ background: groupColor }"
         :key="icon"
         @click="selectIcon(index)"
       >
@@ -69,17 +69,18 @@
       </picture>
     </div>
     <div class="color row" @click="colorPicker2 = !colorPicker2">
-      <div class="currentColor" :style="{ background: iconColor.value }"></div>
+      <!-- <div class="currentColor" :style="{ background: groupColor }"></div> -->
       <h5>your color</h5>
-      <div class="colorPicker" v-if="colorPicker2">
+      <!-- <div class="colorPicker" v-if="colorPicker2">
         <div
           class="colorPicker__item"
           v-for="(color, index) of colors"
           :key="color.name"
           :style="{ background: color.value }"
-          @click="selectIconColor(index)"
+          @click="selectGroupColor(index)"
         ></div>
-      </div>
+      </div> -->
+      <input type="color" v-model="groupColor" />
     </div>
     <input
       type="text"
@@ -180,7 +181,8 @@ export default {
       currentIcon: 0,
       currentIconColor: 0,
       username: "",
-      groupName: ""
+      groupName: "",
+      groupColor: "#509df6"
     };
   },
   computed: {
@@ -220,11 +222,10 @@ export default {
         value: this.icon
       });
     },
-    selectIconColor(index) {
-      this.currentIconColor = index;
+    selectGroupColor(index) {
       this.$store.commit("SETUP_NEW_GROUP", {
         property: "color",
-        value: this.iconColor.name
+        value: this.groupColor
       });
     },
     submitForm() {
@@ -232,7 +233,7 @@ export default {
         this.selectAvatar(this.currentAvatar);
         this.selectAvatarColor(this.currentAvatarColor);
         this.selectIcon(this.currentIcon);
-        this.selectIconColor(this.currentIconColor);
+        this.selectGroupColor(this.currentIconColor);
         eventBus.$emit("stage-1");
       }
     }
@@ -252,7 +253,7 @@ export default {
     this.selectAvatar(this.currentAvatar);
     this.selectAvatarColor(this.currentAvatarColor);
     this.selectIcon(this.currentIcon);
-    this.selectIconColor(this.currentIconColor);
+    this.selectGroupColor(this.groupColor);
   }
 };
 </script>
@@ -357,6 +358,10 @@ form {
   align-items: center;
   position: relative;
   width: 70%;
+
+  & input[type="color"] {
+    margin-left: 10px;
+  }
 }
 .colorPicker {
   display: grid;

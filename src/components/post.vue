@@ -4,19 +4,28 @@
     @drop.prevent="addComment"
     @dragover.prevent
   >
-    <div :class="[color ? `header header--${color}` : 'header'  ]">
+    <div :class="[color ? `header header--${color}` : 'header']">
       <div class="row">
         <picture class="header__icon">
           <img :src="icon" />
         </picture>
         <div class="col">
-          <h4
-            class="header__groupName"
-          >{{ post.group.replace(post.group[0], post.group[0].toUpperCase()) }}</h4>
+          <h4 class="header__groupName">
+            {{ post.group.capitalize() }}
+          </h4>
           <h4 class="header__author">{{ author.name }}</h4>
         </div>
       </div>
-      <img src="/assets/images/icons/Three-dots.svg" @click="size = 4" />
+      <picture class="post__optionsButton" @click="toggleSizeOptions">
+        <img src="/assets/images/icons/Three-dots.svg" />
+        <ul class="post__sizeOptions col" v-if="sizeOptions">
+          <li @click.stop="selectSize('small')">Small</li>
+          <li @click.stop="selectSize('medium')" v-if="clientWidth >= 1080">
+            Medium
+          </li>
+          <li @click.stop="selectSize('large')">Large</li>
+        </ul>
+      </picture>
     </div>
     <div class="col content">
       <div class="content__header row">
@@ -28,7 +37,11 @@
       <picture class="col content__image" v-if="post.image">
         <img :src="post.image" />
         <div class="content__reactions row">
-          <div v-for="(reaction, index) in post.reactions" :key="index" class="row">
+          <div
+            v-for="(reaction, index) in post.reactions"
+            :key="index"
+            class="row"
+          >
             <img
               :src="`/assets/images/icons/like-${reaction.name}.svg`"
               @click="react(reaction.name)"
@@ -67,13 +80,17 @@ export default {
   data() {
     return {
       liked: this.mapReactions(),
-      size: 5
+      // size: this.post.size,
+      sizeOptions: false
     };
   },
   computed: {
     ...mapState({
       mobile: state => state.app.mobile
     }),
+    clientWidth() {
+      return window.innerWidth;
+    },
     group() {
       const groupName = this.post.group;
       const group = this.$store.state.groups.find(el => el.name === groupName);
@@ -92,6 +109,9 @@ export default {
       return this.group.members.find(
         member => member.name === this.post.author
       );
+    },
+    size() {
+      return this.post.size;
     }
   },
   methods: {
@@ -117,6 +137,13 @@ export default {
           }
         }
       });
+    },
+    toggleSizeOptions() {
+      this.sizeOptions = true;
+    },
+    selectSize(val) {
+      this.$store.commit("POST_SIZE", { val, id: this.post.id });
+      this.sizeOptions = false;
     },
     addComment(e) {
       const asd = this.group.members.find(
@@ -147,7 +174,6 @@ export default {
 <style lang="scss" scoped>
 .post {
   @media (min-width: 900px) {
-    // width: 100%;
     // height: 100%;
     margin: 20px 0;
   }
@@ -155,16 +181,74 @@ export default {
   background: #fff;
   margin: 20px 7px;
   // min-width: 300px;
-  width: 90%;
+  width: 100%;
+  min-width: 300px;
   // height: 100%;
 
-  &--4 {
-    @extend .post;
-    grid-column: span 1;
-  }
-  &--5 {
+  &--large {
     @extend .post;
     grid-column: 1 / -1;
+  }
+
+  &--medium {
+    @media (max-width: 1080px) {
+      grid-column: span 2;
+    }
+    @extend .post;
+    grid-column: span 2;
+    // height: 700px;
+  }
+
+  &--small {
+    @extend .post;
+    grid-column: span 1;
+    // width: 300px;
+    // height: 450px;
+  }
+
+  &__optionsButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    & img {
+      cursor: pointer;
+    }
+  }
+
+  &__sizeOptions {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 160px;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #fff;
+    color: #000;
+    font-size: 11px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+    z-index: 3;
+    list-style-type: none;
+
+    & li {
+      cursor: pointer;
+      font-weight: normal;
+      margin: 5px 0;
+
+      &:hover {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+      }
+    }
   }
 }
 
@@ -288,7 +372,9 @@ export default {
 
     & img {
       width: 100%;
+      object-fit: cover;
       height: auto;
+      max-height: 450px;
     }
   }
 
@@ -296,7 +382,7 @@ export default {
     display: flex;
     background: #f7f7f7;
     width: 100%;
-    height: 30px;
+    height: 40px;
     justify-content: flex-end;
     align-items: center;
     font-size: 14px;
@@ -308,7 +394,10 @@ export default {
       align-items: center;
 
       & img {
-        height: 18px;
+        cursor: pointer;
+        height: 22px;
+        width: 22px;
+        margin-right: 3px;
       }
     }
   }

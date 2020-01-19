@@ -1,65 +1,61 @@
 <template>
-  <div class="main row">
-    <div class="sidePanel col" v-if="sidePanelOpen">
-      <Controls
-        :active="{ tab: currentTab.name, view: currentView.name }"
-      ></Controls>
-      <keep-alive>
-        <component :is="currentTab.component" class="display" />
-      </keep-alive>
+  <div class="main" ref="main">
+    <div class="options row" v-if="options">
+      <div class="col">
+        <button
+          v-for="(view, index) in Object.keys(views)"
+          :key="index"
+          @click="changeView(view)"
+        >
+          {{ view }}
+        </button>
+      </div>
+      <div class="col">
+        <router-link to="/add-group">
+          <button>Add Group</button>
+        </router-link>
+      </div>
     </div>
-    <div class="sidePanel--hidden" v-else>
-      <img src="/assets/images/icons/caret.svg" @click="sidePanel = true" />
-    </div>
-    <component
-      v-if="!mobile"
-      :is="currentView.component"
-      class="display"
-    ></component>
+    <component :is="component"></component>
   </div>
 </template>
 
 <script>
-import Controls from "../components/controls.vue";
 import { mapState } from "vuex";
+import BasicView from "./BasicView.vue";
+import SlimView from "./SlimView.vue";
 
 export default {
-  components: {
-    Controls
-  },
   data() {
     return {
-      sidePanel: true,
-      currentTab: this.$store.state.tabs[0],
-      currentView: this.$store.state.tabs[3]
+      options: false,
+      views: {
+        BasicView,
+        SlimView
+      }
     };
   },
   computed: {
     ...mapState({
-      mobile: state => state.app.mobile
+      currentView: state => state.app.view
     }),
-    sidePanelOpen() {
-      return this.mobile ? true : this.sidePanel;
+    component() {
+      return this.views[this.currentView];
     }
   },
   methods: {
-    togglePanel(val) {
-      this.sidePanel = val;
+    toggleOptions() {
+      this.options = !this.options;
+    },
+    changeView(view) {
+      this.$store.commit("APP_VIEW", view);
     }
   },
   mounted() {
-    eventBus.$on("tab-changed", name => {
-      this.currentTab = this.$store.state.tabs.find(el => el.name === name);
-    });
-    eventBus.$on("view-changed", name => {
-      this.currentView = this.$store.state.tabs.find(el => el.name === name);
-    });
-    eventBus.$on("set-tab", () => {
-      this.currentTab = this.$store.state.tabs[0];
-      this.currentView = this.$store.state.tabs[3];
-    });
-    eventBus.$on("toggle-panel", val => {
-      this.togglePanel(val);
+    window.addEventListener("keydown", ({ keyCode }) => {
+      if (keyCode === 38) {
+        this.toggleOptions();
+      }
     });
   }
 };
@@ -67,53 +63,40 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  width: 100%;
-}
-.display {
-  display: flex;
-  min-width: 320px;
-  height: 100%;
-  overflow-y: auto;
-  width: 100%;
-  transition: width 0.3s ease;
-}
-.sidePanel {
-  @media (max-width: 900px) {
-    max-width: 900px;
-  }
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 420px;
   width: 100%;
-  justify-self: flex-start;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
-  // min-height: 100vh;
-  height: 100%;
+}
+.options {
+  position: absolute;
+  width: 60%;
+  min-height: 30px;
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 8px;
+  margin-top: 15px;
+  z-index: 3;
+  padding-top: 10px;
+  box-shadow: 0 0 10px #000;
 
-  &--hidden {
-    display: flex;
-    justify-content: center;
-    padding-top: 20px;
-    // @extend .sidePanel;
-    width: 40px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+  & button {
+    cursor: pointer;
+    width: fit-content;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    height: 25px;
+    border: none;
+    border-radius: 3px;
+    padding: 0 3px;
+    background: transparent;
+    color: #fff;
+    font-weight: bold;
 
-    & img {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      height: 30px;
-      width: 30px;
-      border-radius: 50%;
-      padding: 5px;
-
-      &:hover {
-        background: #ebebeb;
-      }
-      transform: rotate(180deg);
+    &:hover {
+      background: #fff;
+      opacity: 0.6;
+      color: #000;
     }
   }
 }

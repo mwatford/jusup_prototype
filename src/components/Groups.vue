@@ -9,14 +9,17 @@
       :icon="group.icon"
       @click.native="toggle(group.name)"
     ></group-tile>
-    <!-- <img
-      src="/src/assets/icons/check.svg"
+    <img
+      src="/assets/images/icons/clear.svg"
       alt
       class="groups__confirm"
       v-if="selectedGroups.length"
-      @click="confirm"
-    />-->
-    <addPostButton class="postButton" v-if="$store.state.app.mobile"></addPostButton>
+      @click="clearSelected"
+    />
+    <addPostButton
+      class="postButton"
+      v-if="$store.state.app.mobile"
+    ></addPostButton>
   </div>
 </template>
 
@@ -37,7 +40,7 @@ export default {
   },
   computed: {
     ...mapState({
-      groups: state => state.groups
+      groups: state => state.groups.getGroups()
     }),
     selectedGroups() {
       return this.groups.filter(el => el.active);
@@ -63,6 +66,9 @@ export default {
     },
     confirm() {
       eventBus.$emit("tab-changed", 2);
+    },
+    clearSelected() {
+      this.$store.commit("CLEAR_SELECTED_GROUPS");
     }
   },
   mounted() {
@@ -87,14 +93,30 @@ export default {
   padding: 20px 0;
   // margin: 20px 0;
 
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+  }
+
   &__confirm {
     cursor: pointer;
     position: fixed;
-    bottom: 120px;
-    right: 30px;
+    bottom: 80px;
+    left: 300px;
     border-radius: 50%;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.35);
-    background: #fff;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.493);
+    background: #5266c4;
+    border: 3px solid #fff;
+    padding: 5px;
   }
 }
 .postButton {

@@ -4,15 +4,27 @@
     <p class="post__message">{{ post.message }}</p>
     <div class="post__content col">
       <img :src="post.image" class="post__image" v-if="post.image" />
-      <div class="post__reactions row">
+      <div class="post__reactions row" :style="{ background: color + '44' }">
         <div
           class="reaction row wrap center"
           v-for="(reaction, index) in post.reactions"
           :key="index"
+          :style="{
+            color: reaction.liked
+              ? getReactionColor(reaction.name, groupName)
+              : '#222222'
+          }"
         >
-          <img
-            :src="`/assets/images/icons/like-${reaction.name}.svg`"
-            @click="react(reaction.name)"
+          <base-icon
+            :iconType="reaction.name"
+            width="25"
+            height="25"
+            :iconColor="
+              reaction.liked
+                ? getReactionColor(reaction.name, groupName)
+                : '#222222'
+            "
+            @click.native="react(reaction.name)"
           />
           <div>{{ reaction.amount }}</div>
         </div>
@@ -22,16 +34,20 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  props: ["post"],
+  props: ["post", "color", "groupName"],
   data() {
     return {
       liked: this.mapReactions()
     };
   },
   computed: {
+    ...mapGetters(["getReactionColor"]),
     author() {
       return this.$store.state.groups
+        .getGroups()
         .find(el => el.name === this.post.group)
         .members.find(el => el.name === this.post.author);
     }
@@ -47,9 +63,16 @@ export default {
       }
       return null;
     },
-    react(name) {
+    react(name, color) {
       this.$store.commit("REACT", { name, id: this.post.id });
     }
+
+    // getReactionColor(reaction, group) {
+    //   return this.$store.state.groups
+    //     .getGroups()
+    //     .find(el => el.name === group)
+    //     .reactions.find(el => el.name === reaction).color;
+    // }
   }
 };
 </script>
@@ -61,12 +84,13 @@ export default {
   place-items: center;
   flex-direction: row;
   margin-top: 20px;
-  max-width: 615px;
+  // max-width: 615px;
   align-items: flex-start;
   justify-content: center;
-  width: 90%;
+  width: 100%;
   min-width: 270px;
   margin: 20px;
+  padding: 0 10px;
 
   &__avatar {
     width: 45px;
@@ -74,10 +98,11 @@ export default {
   }
 
   &__content {
+    position: relative;
     place-self: start;
-    grid-column: 2 / -1;
-    width: 90%;
-    margin: 12px 0 0 10px;
+    grid-column: 1 / -1;
+    width: 100%;
+    // margin: 12px 0 0 10px;
   }
 
   &__image {
@@ -92,16 +117,18 @@ export default {
   }
 
   &__reactions {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     height: 35px;
     padding: 0 10px;
-    background: #ededed;
+    // background: #ededed;
   }
 }
 .reaction {
   width: 55px;
 
-  img {
-    height: 25px;
+  svg {
     margin-right: 5px;
   }
 }

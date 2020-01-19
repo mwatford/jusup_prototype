@@ -2,8 +2,7 @@ import Groups from "../components/Groups.vue";
 import Desk from "../components/Desk.vue";
 import Chats from "../components/Chats.vue";
 import Alerts from "../components/Alerts.vue";
-import AddGroup from "../views/Add-group.vue";
-import groups from "../scripts/groups.js";
+import MockedGroupService from "../services/MockedGroupService.js";
 import posts from "../scripts/posts.js";
 import users from "../scripts/users.js";
 import alerts from "../scripts/alerts.js";
@@ -29,43 +28,44 @@ const createNewGroup = () => {
   };
 };
 
+const tabs = [
+  {
+    name: "groups",
+    component: Groups
+  },
+  {
+    name: "chats",
+    component: Chats
+  },
+  {
+    name: "desk",
+    component: Desk
+  },
+  {
+    name: "alerts",
+    component: Alerts
+  }
+];
+
+const group = new MockedGroupService();
+
 export const store = new Vuex.Store({
   state: {
     app: {
       mobile: false,
+      view: "SlimView",
       break: 900
     },
-    tabs: [
-      {
-        name: "groups",
-        component: Groups
-      },
-      {
-        name: "chats",
-        component: Chats
-      },
-      {
-        name: "desk",
-        component: Desk
-      },
-      {
-        name: "alerts",
-        component: Alerts
-      },
-      {
-        name: "add-group",
-        component: AddGroup
-      }
-    ],
+    tabs,
     alerts,
     users,
     posts,
-    groups,
+    groups: group,
     newGroup: createNewGroup()
   },
   mutations: {
     TOGGLE_GROUP(state, name) {
-      state.groups.find(group => {
+      state.groups.getGroups().find(group => {
         if (group.name === name) {
           group.active = !group.active;
         }
@@ -75,7 +75,7 @@ export const store = new Vuex.Store({
       state.app.mobile = val;
     },
     CHAT_MESSAGE(state, { message, group }) {
-      state.groups.find(el => {
+      state.groups.getGroups().find(el => {
         if (el.name === group.name) {
           el.chat.messages.push(message);
         }
@@ -97,13 +97,16 @@ export const store = new Vuex.Store({
         }
       );
       data.members.push(user);
-      state.groups.push({
+
+      state.groups.add({
         name: data.groupName,
         color: data.color,
         icon: `/assets/images/icons/${data.icon}.svg`,
         active: false,
         members: data.members,
         user: data.username,
+        height: "small",
+        width: "small",
         admin: data.admin !== null ? data.admin : data.username,
         chat: data.userAbility.chat === true ? { messages: [] } : null,
         reactions: data.reactions ? data.reactions : null,
@@ -123,13 +126,17 @@ export const store = new Vuex.Store({
     },
     CLEAR_SELECTED_GROUPS(state) {
       state.groups
+        .getGroups()
         .filter(el => el.active)
         .forEach(el => {
           el.active = false;
         });
     },
-    CHANGE_GROUP_SIZE(state, { size, group }) {
-      state.groups.find(el => el.name === group).size = size;
+    CHANGE_GROUP_HEIGHT(state, { height, group }) {
+      state.groups.getGroups().find(el => el.name === group).height = height;
+    },
+    CHANGE_GROUP_WIDTH(state, { width, group }) {
+      state.groups.getGroups().find(el => el.name === group).width = width;
     },
     REACT(state, { name, id }) {
       const liked = state.posts
@@ -147,6 +154,16 @@ export const store = new Vuex.Store({
       state.posts
         .find(el => el.id === id)
         .reactions.find(el => el.name === name).liked = !liked;
+    },
+    APP_VIEW(state, name) {
+      state.app.view = name;
     }
+  },
+  getters: {
+    getReactionColor: state => (reaction, group) =>
+      state.groups
+        .getGroups()
+        .find(el => el.name === group)
+        .reactions.find(el => el.name === reaction).color
   }
 });

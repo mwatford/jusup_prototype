@@ -1,6 +1,10 @@
 <template>
   <div class="chats col">
-    <chat v-for="group in filteredChats" :key="group.name" :group="group"></chat>
+    <chat
+      v-for="group in filteredChats"
+      :key="group.name"
+      :group="group"
+    ></chat>
   </div>
 </template>
 
@@ -19,7 +23,7 @@ export default {
   },
   computed: {
     ...mapState({
-      groups: state => state.groups
+      groups: state => state.groups.getGroups()
     }),
     chats() {
       return this.groups.filter(el => el.chat);
@@ -52,5 +56,15 @@ export default {
   align-items: center;
   width: 100%;
   position: relative;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+  }
 }
 </style>

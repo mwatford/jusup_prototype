@@ -43,14 +43,28 @@
     </div>
     <h4 class="configuration__title">Reactions</h4>
     <div class="icons row">
-      <picture
+      <!-- <picture
         v-for="(reaction, index) of reactions"
         :class="['icons__item', { 'icons__item--selected': reaction.selected }]"
         :key="index"
         @click="reaction.selected = !reaction.selected"
       >
         <img :src="`/assets/images/icons/like-${reaction.name}.svg`" alt />
-      </picture>
+      </picture> -->
+      <div v-for="(reaction, index) of reactions" :key="index" class="relative">
+        <base-icon
+          height="40"
+          width="40"
+          :iconType="reaction.name"
+          :iconColor="reaction.color"
+          :class="[
+            'icons__item',
+            { 'icons__item--selected': reaction.selected }
+          ]"
+          @click.native="reaction.selected = !reaction.selected"
+        ></base-icon>
+        <input type="color" v-if="reaction.selected" v-model="reaction.color" />
+      </div>
       <picture class="icons__item">
         <img src="/assets/images/icons/add.svg" alt />
       </picture>
@@ -75,14 +89,17 @@ export default {
         chat: false
       },
       reactions: [
-        { name: "heart", selected: false },
-        { name: "hand", selected: false },
-        { name: "glasses", selected: false },
-        // { name: "facepalm", selected: false },
-        // { name: "fistBump", selected: false },
-        { name: "paw", selected: false },
-        { name: "sad", selected: false },
-        { name: "smile", selected: false }
+        { name: "heart", selected: false, color: "#8a8a8a" },
+        { name: "hand", selected: false, color: "#8a8a8a" },
+        // { name: "glasses", selected: false },
+        { name: "thumbsDown", selected: false, color: "#8a8a8a" },
+        { name: "fistBump", selected: false, color: "#8a8a8a" },
+        { name: "paw", selected: false, color: "#8a8a8a" },
+        { name: "sad", selected: false, color: "#8a8a8a" },
+        { name: "smile", selected: false, color: "#8a8a8a" },
+        { name: "smile2", selected: false, color: "#8a8a8a" },
+        { name: "angry", selected: false, color: "#8a8a8a" },
+        { name: "great", selected: false, color: "#8a8a8a" }
       ]
     };
   },
@@ -101,7 +118,10 @@ export default {
         value: this.reactions
           .map(el => {
             if (el.selected) {
-              return el.name;
+              return {
+                name: el.name,
+                color: el.color
+              };
             }
           })
           .filter(el => el !== undefined)
@@ -165,6 +185,13 @@ export default {
 }
 .row {
   align-items: center;
+}
+
+input[type="color"] {
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .switch {

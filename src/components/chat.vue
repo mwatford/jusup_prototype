@@ -1,39 +1,57 @@
 <template>
   <div class="chat">
     <header class="header row" @click="expanded = !expanded">
-      <picture :class="[`header__icon--${group.color}`, 'header__icon']">
+      <picture :class="['header__icon']" :style="{ background: group.color }">
         <img :src="group.icon" />
       </picture>
       <div class="col">
-        <h4
-          class="header__group"
-        >{{ group.name.replace(group.name[0], group.name[0].toUpperCase()) }}</h4>
-        <h6 v-if="chat.messages.length">{{ chat.messages[chat.messages.length - 1].author }}</h6>
+        <h4 class="header__group">
+          {{ group.name.capitalize() }}
+        </h4>
+        <h6 v-if="chat.messages.length">
+          {{ chat.messages[chat.messages.length - 1].author }}
+        </h6>
         <h6 v-else>{{ group.admin }}</h6>
       </div>
     </header>
     <main class="content col" v-if="expanded">
       <div class="messages" v-chat-scroll>
-        <div v-if="!chat.messages.length" class="message">Start a conversation</div>
-        <div class="message" v-for="(message, index) in chat.messages" :key="index">
+        <div v-if="!chat.messages.length" class="message">
+          Start a conversation
+        </div>
+        <div
+          class="message"
+          v-for="(message, index) in chat.messages"
+          :key="index"
+        >
           <div class="row">
             <img :src="getAvatar(message.author)" />
             <h6>{{ message.author }}</h6>
           </div>
-          <p :class="['message__text', `message__text--${group.color}`]">{{ message.text }}</p>
+          <p :class="['message__text']" :style="{ background: group.color + '44'}">
+            {{ message.text }}
+          </p>
         </div>
       </div>
       <form class="row" @submit.prevent="send">
-        <input type="text" v-model="message.text" placeholder="type your message..." />
+        <input
+          type="text"
+          v-model="message.text"
+          placeholder="type your message..."
+        />
         <button type="submit" value="SEND" class="send">
           <img src="/assets/images/icons/caret.svg" class="rotate-180" />
         </button>
       </form>
       <div class="members col">
-        <h6>members:</h6>
-        <div class="row" v-for="member in group.members" :key="member.name">
-          <img :src="member.avatar" />
-          <h6>{{ member.name }}</h6>
+        <h6 @click="showMembers = !showMembers" class="members__header">
+          members
+        </h6>
+        <div class="col" v-if="showMembers">
+          <div class="row" v-for="member in group.members" :key="member.name">
+            <img :src="member.avatar" />
+            <h6>{{ member.name }}</h6>
+          </div>
         </div>
       </div>
     </main>
@@ -54,7 +72,8 @@ export default {
       message: {
         author: this.group.user,
         text: ""
-      }
+      },
+      showMembers: false
     };
   },
   computed: {
@@ -97,6 +116,10 @@ export default {
   padding: 10px;
   width: 100%;
   border-bottom: 1px solid #d6d6d6;
+
+  &:hover {
+    background: #d6d6d6;
+  }
 
   &__icon {
     display: flex;
@@ -158,6 +181,20 @@ export default {
   width: 80%;
   overflow-y: auto;
   margin: 2px 0 20px 0;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+  }
 }
 form.row {
   width: 75%;
@@ -252,8 +289,20 @@ input {
   width: 80%;
   align-items: flex-start;
 
+  &__header {
+    margin-bottom: 5px;
+
+    &:hover {
+      cursor: pointer;
+      background: #dddddd;
+      text-shadow: 0px 0px 2px #9b9b9b;
+    }
+  }
+
   & h6 {
     font-size: 14px;
+    padding: 2px 4px;
+    width: 100%;
   }
 
   & .row {

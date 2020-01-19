@@ -5,17 +5,27 @@
         <button
           v-for="tab in tabs.slice(0, this.$store.state.app.mobile ? 4 : 2)"
           :key="tab.name"
-          :class="[active.tab === tab.name ? 'button--blue' : 'button', 'button']"
+          :class="[
+            active.tab === tab.name ? 'button--blue' : 'button',
+            'button'
+          ]"
           @click="changeTab(tab.name)"
-        >{{ tab.name.toUpperCase() }}</button>
+        >
+          {{ tab.name.toUpperCase() }}
+        </button>
       </div>
       <div class="row margin-left" v-if="!searchOn && !$store.state.app.mobile">
         <button
           v-for="tab in tabs.slice(2, 4)"
           :key="tab.name"
-          :class="[active.view === tab.name ? 'button--red' : 'button', 'button']"
+          :class="[
+            active.view === tab.name ? 'button--red' : 'button',
+            'button'
+          ]"
           @click="changeView(tab.name)"
-        >{{ tab.name.toUpperCase() }}</button>
+        >
+          {{ tab.name.toUpperCase() }}
+        </button>
       </div>
       <input
         v-if="searchOn"
@@ -26,20 +36,22 @@
         :class="mobile ? 'controls__search--mobile' : 'controls__search'"
       />
     </div>
-    <img src="/assets/images/icons/search.svg" class="controls__icon" @click="searchOn = !searchOn" />
-    <img src="/assets/images/icons/dots.svg" class="controls__icon" @click="toggleOptions" />
-    <!-- <img
-      src="/assets/images/icons/caret.svg"
+    <base-icon
+      iconType="search"
+      width="30"
+      height="30"
+      iconColor="#509df6"
       class="controls__icon"
-      @click="togglePanel"
-      v-if="!mobile"
-    />-->
-    <div class="options col" v-if="options">
-      <router-link to="/add-group" @click="addGroup">
-        <h3 class="options__item">Add new group</h3>
-      </router-link>
-      <!-- <h3 class="options__item">Join group</h3> -->
-    </div>
+      @click.native="searchOn = !searchOn"
+    ></base-icon>
+    <base-icon
+      iconType="caret"
+      iconColor="#509df6"
+      width="30"
+      height="30"
+      class="controls__icon"
+      @click.native="togglePanel"
+    ></base-icon>
   </nav>
 </template>
 
@@ -56,8 +68,7 @@ export default {
   data() {
     return {
       searchOn: false,
-      searchTerm: "",
-      options: false
+      searchTerm: ""
     };
   },
   computed: {
@@ -74,25 +85,11 @@ export default {
     changeView(name) {
       window.eventBus.$emit("view-changed", name);
     },
-    toggleOptions(e) {
-      this.options = !this.options;
-      this.closeOptions(5000);
-    },
     togglePanel() {
-      window.eventBus.$emit("toggle-panel");
-    },
-    closeOptions(time) {
-      if (time) {
-        setTimeout(() => {
-          this.options = false;
-        }, time);
-      } else {
-        this.options = false;
-      }
+      window.eventBus.$emit("toggle-panel", false);
     },
     addGroup() {
       window.eventBus.$emit("add-group");
-      this.closeOptions();
     }
   },
   watch: {
@@ -120,18 +117,16 @@ a {
   z-index: 1;
 
   &__icon {
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
     margin-left: 8px;
-    height: 30px;
-    width: 30px;
     padding: 5px;
-    border-radius: 50%;
+    transition: transform 0.15s ease-in;
 
     &:hover {
-      background: #ebebeb;
+      transform: scale(1.4);
     }
   }
 

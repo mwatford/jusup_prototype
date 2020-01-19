@@ -1,12 +1,18 @@
 <template>
-  <div class="groupTile" @drop.prevent="addPost" @dragover.prevent.stop>
+  <div class="groupTile">
     <div
-      :class="[color ? `groupTile__icon--${color}` : 'groupTile__icon', { 'groupTile__icon--selected': active }]"
+      :class="[
+        'groupTile__icon',
+        color[0] !== '#' ? `groupTile__icon--${color}` : '',
+        { 'groupTile__icon--selected': active }
+      ]"
+      :style="{ background: color }"
     >
       <img :src="icon" />
-      <!-- <img src="/src/assets/avatars/Man 1-5.svg" alt v-if="active" class="groupTile__select" /> -->
     </div>
-    <h1 class="groupTile__name">{{ name.replace(name[0], name[0].toUpperCase()) }}</h1>
+    <h1 class="groupTile__name">
+      {{ name.capitalize() }}
+    </h1>
   </div>
 </template>
 
@@ -15,7 +21,7 @@ export default {
   props: {
     color: {
       type: String,
-      required: false
+      required: true
     },
     name: {
       type: String,
@@ -38,6 +44,7 @@ export default {
         message: null,
         image: null,
         reactions: this.setReactions(),
+        size: "small",
         comments: []
       };
       if (e.dataTransfer.getData("message").length > 0) {
@@ -101,43 +108,39 @@ export default {
     align-items: center;
     height: 78px;
     width: 78px;
+    border-radius: 8px;
 
     img {
       width: 48px;
       height: 48px;
     }
 
-    &--blue {
-      @extend .groupTile__icon;
-      background: #509df6;
-    }
-    &--gray {
-      @extend .groupTile__icon;
-      background: #cccccc;
-    }
-    &--violet {
-      @extend .groupTile__icon;
-      background: #9664ff;
-    }
-    &--pink {
-      @extend .groupTile__icon;
-      background: #cd64ff;
-    }
-    &--yellow {
-      @extend .groupTile__icon;
-      background: #e39d33;
-    }
-    &--orange {
-      @extend .groupTile__icon;
-      background: #ef7b69;
-    }
-    &--green {
-      @extend .groupTile__icon;
-      background: #5ecb8a;
-    }
-    &--lightPink {
-      @extend .groupTile__icon;
-      background: #efaeae;
+    &--instagram {
+      background: #2267a5;
+      background: -moz-linear-gradient(
+        45deg,
+        #f09433 0%,
+        #e6683c 25%,
+        #dc2743 50%,
+        #cc2366 75%,
+        #bc1888 100%
+      );
+      background: -webkit-linear-gradient(
+        45deg,
+        #f09433 0%,
+        #e6683c 25%,
+        #dc2743 50%,
+        #cc2366 75%,
+        #bc1888 100%
+      );
+      background: linear-gradient(
+        45deg,
+        #f09433 0%,
+        #e6683c 25%,
+        #dc2743 50%,
+        #cc2366 75%,
+        #bc1888 100%
+      );
     }
 
     &--selected {
