@@ -1,5 +1,17 @@
 <template>
-  <div>options</div>
+  <div class="options row">
+    <nav class="navigation">
+      <ul class="col">
+        <router-link to="/add-group">
+          <button>Add Group</button>
+        </router-link>
+        <button>Navigation</button>
+        <button>Edit desk</button>
+        <button>Settings</button>
+        <button>About us</button>
+      </ul>
+    </nav>
+  </div>
 </template>
 
 <script>
