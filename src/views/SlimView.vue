@@ -52,16 +52,6 @@ export default {
     }
   },
   methods: {
-    next() {
-      const index = this.tabs.indexOf(this.current);
-      this.animation = "slideLeft";
-
-      if (this.index < this.tabs.length - 1) {
-        return this.index++;
-      }
-      this.index = 0;
-    },
-
     previous() {
       const index = this.tabs.indexOf(this.current);
       this.animation = "slideRight";
@@ -70,6 +60,15 @@ export default {
         return this.index--;
       }
       this.index = this.tabs.length - 1;
+    },
+    next() {
+      const index = this.tabs.indexOf(this.current);
+      this.animation = "slideLeft";
+
+      if (this.index < this.tabs.length - 1) {
+        return this.index++;
+      }
+      this.index = 0;
     },
     options() {
       if (this.$router.currentRoute.name !== "options") {
