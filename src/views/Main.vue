@@ -1,6 +1,6 @@
 <template>
   <div class="main" ref="main">
-    <div class="options row" v-if="options">
+    <!-- <div class="options row" v-if="options">
       <div class="col">
         <button
           v-for="(view, index) in Object.keys(views)"
@@ -15,7 +15,7 @@
           <button>Add Group</button>
         </router-link>
       </div>
-    </div>
+    </div> -->
     <component :is="component"></component>
   </div>
 </template>
@@ -28,7 +28,7 @@ import SlimView from "./SlimView.vue";
 export default {
   data() {
     return {
-      options: false,
+      // options: false,
       views: {
         BasicView,
         SlimView
@@ -44,20 +44,23 @@ export default {
     }
   },
   methods: {
-    toggleOptions() {
-      this.options = !this.options;
-    },
+    // toggleOptions() {
+    //   this.options = !this.options;
+    // },
     changeView(view) {
       this.$store.commit("APP_VIEW", view);
     }
   },
-  mounted() {
-    window.addEventListener("keydown", ({ keyCode }) => {
-      if (keyCode === 38) {
-        this.toggleOptions();
-      }
-    });
-  }
+  // mounted() {
+  //   window.addEventListener("keydown", ({ keyCode }) => {
+  //     if (keyCode === 38) {
+  //       this.toggleOptions();
+  //     }
+  //     if (keyCode === 40) {
+        
+  //     }
+  //   });
+  // }
 };
 </script>
 
