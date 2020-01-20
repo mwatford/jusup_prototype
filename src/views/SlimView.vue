@@ -70,9 +70,9 @@ export default {
       }
       this.index = 0;
     },
-    options() {
-      if (this.$router.currentRoute.name !== "options") {
-        this.$router.push({ path: "/options" });
+    navigation() {
+      if (this.$router.currentRoute.name !== "navigation") {
+        this.$router.push({ path: "/navigation" });
       }
     }
   },
@@ -85,7 +85,7 @@ export default {
         this.next();
       }
       if (keyCode === 38) {
-        this.options();
+        this.navigation();
       }
     });
     window.addEventListener("mousemove", e => {
