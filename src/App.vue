@@ -96,6 +96,9 @@ body {
 .margin-left {
   margin-left: 10px;
 }
+.margin-auto {
+  margin: auto;
+}
 .rotate-180 {
   transform: rotate(180deg);
 }
