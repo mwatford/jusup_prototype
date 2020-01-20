@@ -10,7 +10,7 @@
     @drop.prevent="addPost"
     @dragover.prevent
   >
-    <picture :class="`header`" :style="{ background: group.color }">
+    <div :class="`header`" :style="{ background: group.color }">
       <picture class="header__icon">
         <img :src="group.icon" />
       </picture>
@@ -34,11 +34,6 @@
           iconColor="#fff"
         ></base-icon>
       </picture>
-    </picture>
-    <div
-      :class="[`content`, { center: posts.length === 0 }]"
-      :style="{ border: `1px solid ${color}` }"
-    >
       <div class="row sizeOptions" v-if="sizeOptions">
         <ul class="col">
           <h5>Height</h5>
@@ -57,6 +52,11 @@
           <li @click.stop="changeWidth('large')">Large</li>
         </ul>
       </div>
+    </div>
+    <div
+      :class="[`content`, { center: posts.length === 0 }]"
+      :style="{ border: `1px solid ${color}`, borderTop: '0' }"
+    >
       <h2 v-if="posts.length === 0" :style="{ marginTop: '20px' }">No posts</h2>
       <post
         v-for="(post, index) in posts"
@@ -274,6 +274,7 @@ export default {
   justify-content: flex-start;
   padding: 0 8.5px;
   color: #fff;
+  position: relative;
 
   h4 {
     display: flex;
@@ -355,7 +356,7 @@ export default {
   // width: 160px;
   padding: 20px;
   position: absolute;
-  top: 0;
+  top: 100%;
   right: 0;
   background: #fff;
   color: #000;
