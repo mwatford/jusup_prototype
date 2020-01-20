@@ -31,7 +31,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      index: 2,
+      index: 1,
       cursorX: null,
       animation: ""
     };
@@ -70,6 +70,11 @@ export default {
         return this.index--;
       }
       this.index = this.tabs.length - 1;
+    },
+    options() {
+      if (this.$router.currentRoute.name !== "options") {
+        this.$router.push({ path: "/options" });
+      }
     }
   },
   mounted() {
@@ -79,6 +84,9 @@ export default {
       }
       if (keyCode === 39) {
         this.next();
+      }
+      if (keyCode === 38) {
+        this.options();
       }
     });
     window.addEventListener("mousemove", e => {
@@ -135,39 +143,57 @@ export default {
   top: 50%;
 }
 
-.slideRight-enter-active, .slideLeft-enter-active {
+.slideRight-enter-active {
+  animation: scaleDown-right 0.4s ease-in-out reverse;
+}
+.slideLeft-enter-active {
   // animation: slideRight 2s reverse;
-  animation: scaleUp 0.6s ease-in-out;
+  animation: scaleDown-left 0.4s ease-in-out reverse;
 }
 .slideRight-leave-active {
-  animation: slide-r 0.6s;
+  animation: scaleDown-left 0.6s;
 }
 .slideLeft-leave-active {
-  animation: slide-l 0.6s;
+  animation: scaleDown-right 0.6s;
 }
+// .slideLeft-leave-active {
+//   animation: slide-l 0.6s;
+// }
 
 @keyframes slide-l {
   0% {
-    transform: translateX(0);
+    transform: translateX(-100%);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(0);
   }
 }
 @keyframes slide-r {
   0% {
-    transform: translateX(0);
-  }
-  100% {
     transform: translateX(100%);
   }
+  100% {
+    transform: translateX(0);
+  }
 }
-@keyframes scaleUp {
+@keyframes scaleDown-left {
   0% {
-    transform: scale(0);
+    transform: scale(1) translateX(0);
+    opacity: 1;
   }
   100% {
-    transform: scale(100%);
+    transform: scale(0.4) translateX(100%);
+    opacity: 0;
+  }
+}
+@keyframes scaleDown-right {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.4) translateX(-100%);
   }
 }
 </style>
