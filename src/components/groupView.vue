@@ -275,38 +275,6 @@ export default {
   padding: 0 8.5px;
   color: #fff;
 
-  &--violet {
-    background: #9764f6;
-  }
-
-  &--orange {
-    background: #ef7b69;
-  }
-
-  &--yellow {
-    background: #e39d33;
-  }
-
-  &--blue {
-    background: #509df6;
-  }
-
-  &--gray {
-    background: #ccc;
-  }
-
-  &--pink {
-    background: #cd64ff;
-  }
-
-  &--lightPink {
-    background: #efaeae;
-  }
-
-  &--green {
-    background: #5ecb8a;
-  }
-
   h4 {
     display: flex;
     width: 100%;
