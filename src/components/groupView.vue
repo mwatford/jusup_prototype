@@ -309,9 +309,8 @@ export default {
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  padding-bottom: 20px;
   position: relative;
-  overflow-y: scroll;
+  overflow-y: auto;
   width: 100%;
   height: 100%;
   background: #fff;
