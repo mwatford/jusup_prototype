@@ -89,15 +89,15 @@
     </div>
     <nav class="navigation">
       <ul class="col">
-        <button>
-          <router-link to="/add-group">
-            Add group
-          </router-link>
-        </button>
-        <button>Navigation</button>
-        <button>Edit desk</button>
-        <button>Settings</button>
-        <button>About us</button>
+        <router-link :to="{ path: '/add-group' }">
+          Add group
+        </router-link>
+        <router-link :to="{ path: '/navigation' }">
+          Navigation
+        </router-link>
+        <router-link :to="{ path: '/edit-desk' }">Edit desk</router-link>
+        <router-link :to="{ path: '/settings' }">Settings</router-link>
+        <router-link :to="{ path: '/about-us' }">About us</router-link>
       </ul>
     </nav>
   </div>
@@ -116,6 +116,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.router-link-exact-active {
+  font-weight: bold;
+  color: #fff;
+  margin-left: 10px;
+}
+a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 16px;
+  margin: 8px 0;
+
+  &:hover {
+    font-weight: bold;
+  }
+}
 .options {
   width: 100%;
 }
