@@ -88,6 +88,7 @@
       </div>
     </div>
     <nav class="navigation">
+      <img src="/assets/images/icons/logo.svg" class="logo" />
       <ul class="col">
         <router-link :to="{ path: '/add-group' }">
           Add group
@@ -153,18 +154,16 @@ a {
   height: 100%;
   max-width: 300px;
   background: #509df6;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 0 0 80px 20px;
   display: flex;
   flex-direction: column;
 }
-button {
-  color: #fff;
-  border: none;
-  background: none;
-  border-radius: 4px;
-  font-size: 16px;
-  margin: 8px 0;
+.logo {
+  height: 80px;
+  width: 80px;
+  margin: 20px 20px;
+  align-self: flex-end;
 }
 .wrapper {
   display: grid;
